@@ -3,7 +3,7 @@ package com.example.a1.tastyapp;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class FindActivity extends AppCompatActivity {
+public class ViewActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -8,7 +8,7 @@ import java.net.URL;
 
 public class InsertData extends PostRequest {
     String path="";
-    String serverURLStr="http://13.114.103.74:3000";
+    final static String serverURLStr="http://13.114.103.74:3000";
 
     public InsertData(Activity activity) {
         super(activity);

@@ -81,12 +81,16 @@ public class PostRequest extends AsyncTask<JSONObject, Void, String> {
     protected void onPostExecute(String result) {
         if(result.equals("Succes")){
             Intent intent = new Intent(activity,
-                    FindActivity.class);
+                    ViewActivity.class);
             activity.startActivity(intent);
         }
         if(result.equals("Server Error : 401")){
             Toast.makeText(activity,"아이디와 비밀번호를 확인해주세요",Toast.LENGTH_SHORT).show();
         }
+        if(result.equals("Server Error : 402")){
+            Toast.makeText(activity,"이미 있는 아이디 입니다.",Toast.LENGTH_SHORT).show();
+        }
+
 
     }
 

@@ -1,5 +1,8 @@
 package com.example.a1.tastyapp;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -70,9 +73,18 @@ public class RegisterActivity extends AppCompatActivity {
                     } catch (JSONException e) {
                         Log.e(TAG, "JSONEXception");
                     }
-                    new InsertData(RegisterActivity.this, "insert-user").execute(postDataParam);
+                    if(isNetworkAvailable())
+                        new InsertData(RegisterActivity.this, "insert-user").execute(postDataParam);
+                    else
+                        Toast.makeText(RegisterActivity.this, "인터넷 연결을 확인하세요.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
+    }
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }

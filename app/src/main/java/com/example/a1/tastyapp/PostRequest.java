@@ -1,7 +1,10 @@
 package com.example.a1.tastyapp;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
@@ -33,43 +36,45 @@ public class PostRequest extends AsyncTask<JSONObject, Void, String> {
     protected String doInBackground(JSONObject... postDataParams) {
 
         try {
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setReadTimeout(10000 /* milliseconds */);
-            conn.setConnectTimeout(10000 /* milliseconds */);
-            conn.setRequestMethod("POST");
-            conn.setDoInput(true);
-            conn.setDoOutput(true);
+            if (isNetworkAvailable()) {
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setReadTimeout(10000 /* milliseconds */);
+                conn.setConnectTimeout(10000 /* milliseconds */);
+                conn.setRequestMethod("POST");
+                conn.setDoInput(true);
+                conn.setDoOutput(true);
 
-            OutputStream os = conn.getOutputStream();
-            BufferedWriter writer = new BufferedWriter(
-                    new OutputStreamWriter(os, "UTF-8"));
-            String str = getPostDataString(postDataParams[0]);
-            Log.e("params", "Post String = " + str);
-            writer.write(str);
+                OutputStream os = conn.getOutputStream();
+                BufferedWriter writer = new BufferedWriter(
+                        new OutputStreamWriter(os, "UTF-8"));
+                String str = getPostDataString(postDataParams[0]);
+                Log.e("params", "Post String = " + str);
+                writer.write(str);
 
-            writer.flush();
-            writer.close();
-            os.close();
+                writer.flush();
+                writer.close();
+                os.close();
 
-            int responseCode = conn.getResponseCode();
+                int responseCode = conn.getResponseCode();
 
-            if (responseCode == HttpsURLConnection.HTTP_OK) {
+                if (responseCode == HttpsURLConnection.HTTP_OK) {
 
-                BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                StringBuffer sb = new StringBuffer("");
-                String line = "";
+                    BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                    StringBuffer sb = new StringBuffer("");
+                    String line = "";
 
-                while ((line = in.readLine()) != null) {
+                    while ((line = in.readLine()) != null) {
 
-                    sb.append(line);
-                    break;
+                        sb.append(line);
+                        break;
+                    }
+
+                    in.close();
+                    return sb.toString();
+
+                } else {
+                    return new String("Server Error : " + responseCode);
                 }
-
-                in.close();
-                return sb.toString();
-
-            } else {
-                return new String("Server Error : " + responseCode);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -87,8 +92,8 @@ public class PostRequest extends AsyncTask<JSONObject, Void, String> {
         if(result.equals("Server Error : 401")){
             Toast.makeText(activity,"아이디와 비밀번호를 확인해주세요",Toast.LENGTH_SHORT).show();
         }
-        if(result.equals("Server Error : 402")){
-            Toast.makeText(activity,"이미 있는 아이디 입니다.",Toast.LENGTH_SHORT).show();
+        if(result.equals("exist id")){
+            Toast.makeText(activity,"이미 있는 아이디 혹은 이메일 입니다.",Toast.LENGTH_SHORT).show();
         }
 
 
@@ -117,5 +122,11 @@ public class PostRequest extends AsyncTask<JSONObject, Void, String> {
 
         }
         return result.toString();
+    }
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }

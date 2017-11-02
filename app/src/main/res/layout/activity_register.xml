@@ -8,43 +8,42 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginHorizontal="50dp"
         android:gravity="center"
-        android:orientation="vertical"
-        tools:layout_editor_absoluteY="8dp"
-        tools:layout_editor_absoluteX="8dp"
-        >
-
-        <ImageView
-            android:id="@+id/login_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+        android:layout_marginHorizontal="50dp"
+        android:orientation="vertical">
 
         <EditText
-            android:id="@+id/get_id"
+            android:id="@+id/put_id"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="ID"/>
 
+
         <EditText
-            android:id="@+id/get_pass"
+            android:id="@+id/put_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="PASSWORD"
+            android:hint="Email"/>
+
+        <EditText
+            android:id="@+id/put_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="PassWord"
             android:password="true"/>
 
-        <Button
-            android:id="@+id/sig_in"
+        <EditText
+            android:id="@+id/put_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Sign in" />
-
+            android:hint="Name"/>
 
         <Button
-            android:id="@+id/sig_up"
+            android:id="@+id/regist_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="가입하기" />
+            android:text="Sign Up" />
+
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

@@ -79,13 +79,15 @@ public class PostRequest extends AsyncTask<JSONObject, Void, String> {
 
     @Override
     protected void onPostExecute(String result) {
-          Toast.makeText(activity, result,
-                Toast.LENGTH_LONG).show();
         if(result.equals("Succes")){
             Intent intent = new Intent(activity,
                     FindActivity.class);
             activity.startActivity(intent);
         }
+        if(result.equals("Server Error : 401")){
+            Toast.makeText(activity,"아이디와 비밀번호를 확인해주세요",Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     private String getPostDataString(JSONObject params) throws Exception {

@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,13 +29,19 @@ public class MainActivity extends AppCompatActivity {
                 EditText edit_user_id = (EditText) findViewById(R.id.get_id);
                 EditText edit_password = (EditText) findViewById(R.id.get_pass);
                 JSONObject postDataParam = new JSONObject();
-                try {
-                    postDataParam.put("user_id", edit_user_id.getText().toString());
-                    postDataParam.put("password", edit_password.getText().toString());
-                } catch (JSONException e) {
-                    Log.e(TAG, "JSONEXception");
+                if(edit_user_id.getText().toString().equals("") || edit_password.getText().toString().equals("")) {
+                    Toast.makeText(MainActivity.this, "아이디와 비밀번호를 입력해 주세요.", Toast.LENGTH_SHORT).show();
                 }
-               new InsertData(MainActivity.this, "login").execute(postDataParam);
+                else{
+                    try {
+                        postDataParam.put("user_id", edit_user_id.getText().toString());
+                        postDataParam.put("password", edit_password.getText().toString());
+                    } catch (JSONException e) {
+                        Log.e(TAG, "JSONEXception");
+                    }
+                    new InsertData(MainActivity.this, "login").execute(postDataParam);
+                }
+
             }
         });
 

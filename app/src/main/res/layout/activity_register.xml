@@ -33,6 +33,13 @@
             android:password="true"/>
 
         <EditText
+            android:id="@+id/put_password2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Check PassWord"
+            android:password="true"/>
+
+        <EditText
             android:id="@+id/put_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

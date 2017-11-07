@@ -1,4 +1,4 @@
-package com.example.a1.tastyapp;
+package com.example.a1.tastyapp.Request;
 
 import android.app.Activity;
 

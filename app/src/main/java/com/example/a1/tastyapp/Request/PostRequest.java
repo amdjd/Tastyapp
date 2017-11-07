@@ -1,4 +1,4 @@
-package com.example.a1.tastyapp;
+package com.example.a1.tastyapp.Request;
 
 import android.app.Activity;
 import android.content.Context;
@@ -8,6 +8,8 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.example.a1.tastyapp.MainActivity;
 
 import org.json.JSONObject;
 
@@ -86,7 +88,7 @@ public class PostRequest extends AsyncTask<JSONObject, Void, String> {
     protected void onPostExecute(String result) {
         if(result.equals("Succes")){
             Intent intent = new Intent(activity,
-                    ViewActivity.class);
+                    MainActivity.class);
             activity.startActivity(intent);
         }
         if(result.equals("Server Error : 401")){

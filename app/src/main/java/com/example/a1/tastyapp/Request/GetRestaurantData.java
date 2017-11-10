@@ -5,13 +5,12 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.util.Base64;
 import android.util.Log;
 
 import com.example.a1.tastyapp.Adapter.MasonryAdapter;
-import com.example.a1.tastyapp.R;
-import com.example.a1.tastyapp.Item.Restaurant;
 import com.example.a1.tastyapp.Adapter.SpacesItemDecoration;
+import com.example.a1.tastyapp.Item.Restaurant;
+import com.example.a1.tastyapp.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -66,9 +65,16 @@ public class GetRestaurantData extends GetRequest {
                 JSONObject jsonObject = (JSONObject) jsonArray.get(i);
 
                 Restaurant restaurant = new Restaurant(jsonObject.getString("_id"),
-                        jsonObject.getString("user_id"),
-                        jsonObject.getString("email"),
-                        getBitmapFromString(jsonObject.getString("password")));
+                        jsonObject.getDouble("point"),
+                        jsonObject.getString("name"),
+                        getBitmapFromString(jsonObject.getJSONObject("picture")),
+                        jsonObject.getString("tel"),
+                        jsonObject.getString("address"),
+                        jsonObject.getDouble("latiude"),
+                        jsonObject.getDouble("longitude"),
+                        jsonObject.getString("businesshours"),
+                        jsonObject.getString("businesshours")
+                        );
 
                 output.add(restaurant);
             }
@@ -76,16 +82,21 @@ public class GetRestaurantData extends GetRequest {
             Log.e(TAG, "Exception in processing JSONString.", e);
             e.printStackTrace();
         }
+
+
         return output;
+
     }
 
-    private Bitmap getBitmapFromString(String jsonString) {
-/*
-* This Function converts the String back to Bitmap
-* */
-        byte[] decodedString = Base64.decode(jsonString, Base64.DEFAULT);
-        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-        return decodedByte;
+    private Bitmap getBitmapFromString(JSONObject obj) throws JSONException {
+        Bitmap bitmap=null;
+        byte[] tmp=new byte[obj.getJSONArray("data").length()];
+        for(int i=0;i<obj.getJSONArray("data").length();i++){
+            tmp[i]=(byte)(((int)obj.getJSONArray("data").get(i)) & 0xFF);
+        }
+        bitmap= BitmapFactory.decodeByteArray(tmp, 0, tmp.length);
+        //Toast.makeText(activity,""+tmp[1],Toast.LENGTH_SHORT).show();
+        return bitmap;
     }
 
 }

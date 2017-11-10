@@ -35,6 +35,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:padding="8dp" />
+
         <TextView
             android:id="@+id/point"
             android:layout_width="match_parent"

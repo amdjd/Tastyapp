@@ -41,7 +41,7 @@ public class MasonryAdapter extends RecyclerView.Adapter<MasonryAdapter.MasonryV
     public void onBindViewHolder(MasonryView holder, int position) {
         holder.imageView.setImageBitmap(mItems.get(position).getPicture());
         holder.nameTextView.setText(mItems.get(position).getName());
-        holder.pointTextView.setText(mItems.get(position).getPoint());
+        holder.pointTextView.setText(""+mItems.get(position).getPoint());
     }
 
     @Override

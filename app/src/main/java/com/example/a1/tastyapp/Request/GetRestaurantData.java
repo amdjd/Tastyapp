@@ -1,8 +1,6 @@
 package com.example.a1.tastyapp.Request;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
@@ -67,7 +65,7 @@ public class GetRestaurantData extends GetRequest {
                 Restaurant restaurant = new Restaurant(jsonObject.getString("_id"),
                         jsonObject.getDouble("point"),
                         jsonObject.getString("name"),
-                        getBitmapFromString(jsonObject.getJSONObject("picture")),
+                        new URL("http:/13.114.103.74/"+jsonObject.getString("picture")),
                         jsonObject.getString("tel"),
                         jsonObject.getString("address"),
                         jsonObject.getDouble("latiude"),
@@ -75,11 +73,12 @@ public class GetRestaurantData extends GetRequest {
                         jsonObject.getString("businesshours"),
                         jsonObject.getString("businesshours")
                         );
-
                 output.add(restaurant);
             }
         } catch (JSONException e) {
             Log.e(TAG, "Exception in processing JSONString.", e);
+            e.printStackTrace();
+        } catch (MalformedURLException e) {
             e.printStackTrace();
         }
 
@@ -87,16 +86,4 @@ public class GetRestaurantData extends GetRequest {
         return output;
 
     }
-
-    private Bitmap getBitmapFromString(JSONObject obj) throws JSONException {
-        Bitmap bitmap=null;
-        byte[] tmp=new byte[obj.getJSONArray("data").length()];
-        for(int i=0;i<obj.getJSONArray("data").length();i++){
-            tmp[i]=(byte)(((int)obj.getJSONArray("data").get(i)) & 0xFF);
-        }
-        bitmap= BitmapFactory.decodeByteArray(tmp, 0, tmp.length);
-        //Toast.makeText(activity,""+tmp[1],Toast.LENGTH_SHORT).show();
-        return bitmap;
-    }
-
 }

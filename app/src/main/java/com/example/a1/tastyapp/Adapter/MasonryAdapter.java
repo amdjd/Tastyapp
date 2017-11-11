@@ -9,8 +9,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.a1.tastyapp.R;
 import com.example.a1.tastyapp.Item.Restaurant;
+import com.example.a1.tastyapp.R;
+import com.example.a1.tastyapp.Request.DownloadImageTask;
 
 import java.util.ArrayList;
 
@@ -39,7 +40,9 @@ public class MasonryAdapter extends RecyclerView.Adapter<MasonryAdapter.MasonryV
 
     @Override
     public void onBindViewHolder(MasonryView holder, int position) {
-        holder.imageView.setImageBitmap(mItems.get(position).getPicture());
+        new DownloadImageTask(holder.imageView)
+                .execute(""+mItems.get(position).getPicture());
+        //holder.imageView.setImageBitmap(mItems.get(position).getPicture());
         holder.nameTextView.setText(mItems.get(position).getName());
         holder.pointTextView.setText(""+mItems.get(position).getPoint());
     }

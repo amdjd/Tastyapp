@@ -1,6 +1,7 @@
 package com.example.a1.tastyapp.Request;
 
 import android.app.Activity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
@@ -23,8 +24,13 @@ import java.util.ArrayList;
  */
 
 public class GetRestaurantData extends GetRequest {
+    String layoutManager;
     public GetRestaurantData(Activity activity) {
         super(activity);
+    }
+    public GetRestaurantData(Activity activity, String layoutManager) {
+        super(activity);
+        this.layoutManager = layoutManager;
     }
     final static String serverURLStr="http://13.114.103.74:3000";
     @Override
@@ -44,13 +50,29 @@ public class GetRestaurantData extends GetRequest {
 
         ArrayList<Restaurant> ImageItem = getArrayListFromJSONString(jsonString);
         MasonryAdapter adapter = new MasonryAdapter(activity, ImageItem);
-        RecyclerView mRecyclerView = (RecyclerView)activity.findViewById(R.id.masonry_grid);
-        mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+        RecyclerView mRecyclerView = (RecyclerView)activity.findViewById(R.id.masonry);
+        if(layoutManager=="LinearLayoutManager") {
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false));
+            adapter = new MasonryAdapter(activity, ImageItem, R.layout.mylist_item);
+        }
+        else
+            mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+
         mRecyclerView.setAdapter(adapter);
         SpacesItemDecoration decoration = new SpacesItemDecoration(16);
         mRecyclerView.addItemDecoration(decoration);
 
     }
+    /*    //머터리얼 뷰
+        private void initListView() {
+            ArrayList<ImageItem> ImageItem = prepareDataSource();
+            adapter = new MasonryAdapter(this, ImageItem);
+            mRecyclerView = (RecyclerView) findViewById(R.id.masonry_list);
+            mRecyclerView.setAdapter(adapter);
+            SpacesItemDecoration decoration = new SpacesItemDecoration(16);
+            mRecyclerView.addItemDecoration(decoration);
+        }*/
+
 
     protected ArrayList<Restaurant> getArrayListFromJSONString(String jsonString) {
         ArrayList<Restaurant> output = new ArrayList();
@@ -68,8 +90,9 @@ public class GetRestaurantData extends GetRequest {
                         new URL("http:/13.114.103.74/"+jsonObject.getString("picture")),
                         jsonObject.getString("tel"),
                         jsonObject.getString("address"),
-                        jsonObject.getDouble("latiude"),
-                        jsonObject.getDouble("longitude"),
+                        Double.parseDouble(jsonObject.getJSONObject("loc").getJSONArray("coordinates").get(0).toString()),
+                        Double.parseDouble(jsonObject.getJSONObject("loc").getJSONArray("coordinates").get(1).toString()),
+                        //jsonObject.getDouble("longitude"),
                         jsonObject.getString("businesshours"),
                         jsonObject.getString("businesshours")
                         );

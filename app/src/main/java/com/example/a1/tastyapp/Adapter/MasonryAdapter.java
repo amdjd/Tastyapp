@@ -19,13 +19,19 @@ import java.util.ArrayList;
  * Created by Suleiman on 26-07-2015.
  */
 public class MasonryAdapter extends RecyclerView.Adapter<MasonryAdapter.MasonryView> {
-
+    int layout;
     private Context mContext;
     private ArrayList<Restaurant> mItems = new ArrayList<Restaurant>();
 
     public MasonryAdapter(Context context, ArrayList<Restaurant> items) {
         mContext = context;
         mItems = items;
+        layout =R.layout.grid_item;
+    }
+    public MasonryAdapter(Context context, ArrayList<Restaurant> items, int layout) {
+        mContext = context;
+        mItems = items;
+        this.layout=layout;
     }
     public void addItem(Restaurant item) {
         mItems.add(item);
@@ -33,7 +39,7 @@ public class MasonryAdapter extends RecyclerView.Adapter<MasonryAdapter.MasonryV
     }
     @Override
     public MasonryView onCreateViewHolder(ViewGroup parent, int viewType) {
-        View layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.grid_item, parent, false);
+        View layoutView = LayoutInflater.from(parent.getContext()).inflate(layout, parent, false);
         MasonryView masonryView = new MasonryView(layoutView);
         return masonryView;
     }

@@ -28,6 +28,85 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
+        app:layout_anchor="@+id/bottomSheet"
+        app:layout_anchorGravity="top|right"
         app:srcCompat="@android:drawable/ic_dialog_email" />
 
+    <LinearLayout
+        android:id="@+id/bottomSheet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#EEE"
+        android:orientation="vertical"
+        app:behavior_peekHeight="60dp"
+        app:behavior_hideable="false"
+        app:layout_behavior="@string/bottom_sheet_behavior">
+
+        <TextView
+            android:id="@+id/bottomSheetText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:textColor="@color/colorPrimaryDark"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="평점순 >" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#EEE"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/pointSort"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:padding="16dp"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="평점순"/>
+            <Button
+                android:id="@+id/distanceSort"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:padding="16dp"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="거리순"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#EEE"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#EEE"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="반경" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="0000M" />
+            </LinearLayout>
+
+            <SeekBar
+                android:id="@+id/distancSeekBar"
+                style="@style/Widget.AppCompat.SeekBar.Discrete"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="4"
+                android:progress="3" />
+        </LinearLayout>
+
+
+    </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>

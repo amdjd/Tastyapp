@@ -32,16 +32,7 @@ public class GetRestaurantData extends GetRequest {
         super(activity);
         this.layoutManager = layoutManager;
     }
-    final static String serverURLStr="http://13.114.103.74:3000";
-    @Override
-    protected void onPreExecute() {
-;
-        try {
-            url = new URL(serverURLStr+"/get-restaurant");
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-    }
+
 
     @Override
     protected void onPostExecute(String jsonString) {

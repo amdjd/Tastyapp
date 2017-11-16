@@ -20,6 +20,9 @@ import android.view.View;
 
 import com.example.a1.tastyapp.Request.GetRestaurantData;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -66,8 +69,18 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        JSONObject getDataParam = new JSONObject();
+
+        try {
+            getDataParam.put("distance", "500");
+            getDataParam.put("longitude", "");
+            getDataParam.put("latitude", "");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
         checkDangerousPermissions();
-        new GetRestaurantData(MainActivity.this).execute();
+        new GetRestaurantData(MainActivity.this).execute(getDataParam);
     }
 
     @Override

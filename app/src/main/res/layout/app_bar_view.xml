@@ -71,6 +71,13 @@
                 android:padding="16dp"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="거리순"/>
+            <Button
+                android:id="@+id/reviwSort"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:padding="16dp"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="리뷰순"/>
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -90,12 +97,13 @@
                     android:textAppearance="?android:attr/textAppearanceLarge"
                     android:text="반경" />
                 <TextView
+                    android:id="@+id/destence"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="16dp"
                     android:textColor="@color/colorPrimaryDark"
                     android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:text="0000M" />
+                    android:text="500M" />
             </LinearLayout>
 
             <SeekBar

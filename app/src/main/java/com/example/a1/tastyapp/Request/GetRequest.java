@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -15,7 +13,7 @@ import java.net.URL;
 
 import javax.net.ssl.HttpsURLConnection;
 
-abstract public class GetRequest extends AsyncTask<JSONObject, Void, String> {
+abstract public class GetRequest extends AsyncTask<String, Void, String> {
     final static String TAG = "AndroidNodeJS";
     Activity activity;
     URL url;
@@ -29,13 +27,13 @@ abstract public class GetRequest extends AsyncTask<JSONObject, Void, String> {
     protected void onPreExecute() {
         ;
         try {
-            url = new URL(serverURLStr+"/query-res");
+            url = new URL(serverURLStr+"/get-restaurant");
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
     }
     @Override
-    protected String doInBackground(JSONObject... postDataParams) {
+    protected String doInBackground(String... strings) {
         StringBuffer output = new StringBuffer();
 
         try {

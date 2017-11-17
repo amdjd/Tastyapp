@@ -6,14 +6,14 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.a1.tastyapp.Request.GetRestaurantData;
+import com.example.a1.tastyapp.Item.Restaurant;
+import com.example.a1.tastyapp.Request.QueryResData;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -27,18 +27,20 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 
 public class NavigateActivity extends AppCompatActivity implements OnMapReadyCallback {
-    RecyclerView mRecyclerView;
-    final private String TAG = "LocationServicesTest";
+
+    final private String TAG = "NavigateActivity";
     final private int MY_PERMISSION_REQUEST_LOCATION = 100;
     // UI Widgets.
     private Button mStartUpdatesButton;
-    private Button mStopUpdatesButton;
-    private TextView mAddressTextView;
     private TextView mPrecisionTextView;
     private TextView mLatitudeTextView;
     private TextView mLongitudeTextView;
@@ -48,6 +50,8 @@ public class NavigateActivity extends AppCompatActivity implements OnMapReadyCal
     private Location mCurrentLocation;
     private LocationListener mLocationListener;
     private MarkerOptions makerOptions;
+
+    static ArrayList<Restaurant> items;
 
     LatLng currentPosition;
     List<Marker> previous_marker = null;
@@ -62,19 +66,9 @@ public class NavigateActivity extends AppCompatActivity implements OnMapReadyCal
         setContentView(R.layout.activity_navigate);
 
         mStartUpdatesButton = (Button) findViewById(R.id.start_updates_button);
-        mLatitudeTextView = (TextView) findViewById(R.id.latitude_text);
-        mLongitudeTextView = (TextView) findViewById(R.id.longitude_text);
-        mPrecisionTextView = (TextView) findViewById(R.id.precision_text);
 
         previous_marker = new ArrayList<Marker>();
 
-        Button button = (Button)findViewById(R.id.button);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //showPlaceInformation(currentPosition);
-            }
-        });
 
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -87,9 +81,37 @@ public class NavigateActivity extends AppCompatActivity implements OnMapReadyCal
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        new GetRestaurantData(this,"LinearLayoutManager").execute();
+        //new GetRestaurantData(this,"LinearLayoutManager").execute();
     }
+    public void QueryData(double distance) {
+        startLocationUpdates();
+        JSONObject postDataParam = new JSONObject();
+        double latitude = 0.0;
+        double longitude = 0.0;
+        if (mCurrentLocation != null) {
+            latitude = mCurrentLocation.getLatitude();
+            longitude = mCurrentLocation.getLongitude();
+        }
+        try {
+            postDataParam.put("distance", distance);
+            postDataParam.put("longitude", longitude);
+            postDataParam.put("latitude", latitude);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
+        //new GetRestaurantData(MainActivity.this).execute();
+        //new QueryResData(NavigateActivity.this, "query-res").execute(postDataParam);
+        try {
+            String result = new QueryResData(NavigateActivity.this, "LinearLayoutManager").execute(postDataParam).get();
+            items = QueryResData.getArrayListFromJSONString(result);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        Toast.makeText(this,""+items.isEmpty(),Toast.LENGTH_SHORT);
+    }
     private void startLocationUpdates() {
         mLocationListener = new LocationListener() {
             @Override
@@ -161,21 +183,27 @@ public class NavigateActivity extends AppCompatActivity implements OnMapReadyCal
     private void updateUI() {
         double latitude= 0.0;
         double longitude = 0.0;
-        float precision=0.0f;
         if (mCurrentLocation != null) {
             latitude = mCurrentLocation.getLatitude();
             longitude = mCurrentLocation.getLongitude();
-            precision = mCurrentLocation.getAccuracy();
         }
-        mLatitudeTextView.setText("Latitude: "+latitude);
-        mLongitudeTextView.setText("Longitude: "+ longitude);
-        mPrecisionTextView.setText("Precision: "+ precision);
     }
 
     public void startUpdatesButtonHandler(View view) {
         if (mGoogleApiClient.isConnected() && isPermissionGranted()) {
             mStartUpdatesButton.setEnabled(true);
             startLocationUpdates();
+            QueryData(0.5);
+
+            for(int i =0; items.size()>i; i++) {
+                LatLng latLng
+                        = new LatLng(items.get(i).getLatiude(), items.get(i).getLongitude());
+                MarkerOptions markerOptions = new MarkerOptions();
+                markerOptions.position(latLng);
+                //markerOptions.title(place.getName());
+                Marker item = mGoogleMap.addMarker(markerOptions);
+                previous_marker.add(item);
+            }
         }
     }
 

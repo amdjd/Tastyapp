@@ -1,9 +1,9 @@
 package com.example.a1.tastyapp.Request;
 
 import android.app.Activity;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 
 import com.example.a1.tastyapp.Adapter.MasonryAdapter;
@@ -19,21 +19,29 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
-/**
- * Created by kwanwoo on 2017. 10. 17..
- */
+import static android.content.ContentValues.TAG;
 
-public class GetRestaurantData extends GetRequest {
+
+public class QueryResData extends PostRequest {
+
+    final static String serverURLStr="http://13.114.103.74:3000";
+
     String layoutManager;
-
-    MasonryAdapter adapter;
-    RecyclerView mRecyclerView;
-    public GetRestaurantData(Activity activity) {
+    ArrayList<Restaurant> ImageItem;
+    public QueryResData(Activity activity) {
         super(activity);
     }
-    public GetRestaurantData(Activity activity, String layoutManager) {
+    public QueryResData(Activity activity, String layoutManager){
         super(activity);
-        this.layoutManager = layoutManager;
+        this.layoutManager=layoutManager;
+    }
+    @Override
+    protected void onPreExecute() {
+        try {
+            url = new URL(serverURLStr + "/query-res");
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -42,26 +50,23 @@ public class GetRestaurantData extends GetRequest {
         if (jsonString == null)
             return;
 
-        ArrayList<Restaurant> ImageItem = getArrayListFromJSONString(jsonString);
-
-        adapter = new MasonryAdapter(activity, ImageItem);
-        mRecyclerView = (RecyclerView)activity.findViewById(R.id.masonry);
-
+        ImageItem = getArrayListFromJSONString(jsonString);
+        MasonryAdapter adapter = new MasonryAdapter(activity, ImageItem);
+        RecyclerView mRecyclerView = (RecyclerView)activity.findViewById(R.id.masonry);
         if(layoutManager=="LinearLayoutManager") {
             mRecyclerView.setLayoutManager(new LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false));
             adapter = new MasonryAdapter(activity, ImageItem, R.layout.mylist_item);
         }
         else
-            mRecyclerView.setLayoutManager(new GridLayoutManager(activity,2));
+            mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
 
         mRecyclerView.setAdapter(adapter);
         SpacesItemDecoration decoration = new SpacesItemDecoration(16);
         mRecyclerView.addItemDecoration(decoration);
-
     }
 
 
-    protected ArrayList<Restaurant> getArrayListFromJSONString(String jsonString) {
+    public static ArrayList<Restaurant> getArrayListFromJSONString(String jsonString) {
         ArrayList<Restaurant> output = new ArrayList();
         try {
 
@@ -79,10 +84,9 @@ public class GetRestaurantData extends GetRequest {
                         jsonObject.getString("address"),
                         Double.parseDouble(jsonObject.getJSONObject("loc").getJSONArray("coordinates").get(0).toString()),
                         Double.parseDouble(jsonObject.getJSONObject("loc").getJSONArray("coordinates").get(1).toString()),
-                        //jsonObject.getDouble("longitude"),
                         jsonObject.getString("businesshours"),
-                        jsonObject.getString("businesshours")
-                        );
+                        jsonObject.getString("menu")
+                );
                 output.add(restaurant);
             }
         } catch (JSONException e) {
@@ -97,3 +101,4 @@ public class GetRestaurantData extends GetRequest {
 
     }
 }
+

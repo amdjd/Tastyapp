@@ -38,7 +38,7 @@
         android:layout_height="wrap_content"
         android:background="#EEE"
         android:orientation="vertical"
-        app:behavior_peekHeight="60dp"
+        app:behavior_peekHeight="50dp"
         app:behavior_hideable="false"
         app:layout_behavior="@string/bottom_sheet_behavior">
 
@@ -49,7 +49,7 @@
             android:padding="16dp"
             android:textColor="@color/colorPrimaryDark"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="평점순 >" />
+            android:text="거리순 >" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -103,7 +103,7 @@
                     android:padding="16dp"
                     android:textColor="@color/colorPrimaryDark"
                     android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:text="500M" />
+                    android:text="" />
             </LinearLayout>
 
             <SeekBar
@@ -112,7 +112,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:max="4"
-                android:progress="3" />
+                android:progress="0" />
         </LinearLayout>
 
 

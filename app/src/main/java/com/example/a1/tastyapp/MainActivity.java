@@ -13,17 +13,16 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.a1.tastyapp.Request.GetQueryResData;
 import com.example.a1.tastyapp.Request.GetRestaurantData;
 import com.example.a1.tastyapp.Request.QueryResData;
 import com.google.android.gms.common.ConnectionResult;
@@ -45,37 +44,22 @@ public class MainActivity extends AppCompatActivity
     private LocationListener mLocationListener;
     private boolean mRequestingLocationUpdates=true;
 
-
+    Toolbar toolbar;
 
     LocationRequest locRequest = new LocationRequest().setInterval(10000)
             .setFastestInterval(5000)
             .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
-
-    private Button mStartUpdatesButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        SearchView mSearchView;
-
         toolbar.inflateMenu(R.menu.search);
-        mSearchView = (SearchView) toolbar.getMenu().findItem(R.id.menu_search).getActionView();
-        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-                return false;
-            }
 
-            @Override
-            public boolean onQueryTextChange(String s) {
-                return false;
-            }
-
-        });
+        new GetQueryResData(MainActivity.this).execute();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -106,7 +90,6 @@ public class MainActivity extends AppCompatActivity
                     .addApi(LocationServices.API)
                     .build();
         }
-
 
         final TextView tv = (TextView)findViewById(R.id.destence);
         SeekBar sb  = (SeekBar) findViewById(R.id.distancSeekBar);
@@ -142,7 +125,7 @@ public class MainActivity extends AppCompatActivity
                 }
             }
         });
-
+        requestPermission();
         new GetRestaurantData(MainActivity.this).execute();
     }
 
@@ -165,7 +148,6 @@ public class MainActivity extends AppCompatActivity
 
         //new GetRestaurantData(MainActivity.this).execute();
         new QueryResData(MainActivity.this).execute(postDataParam);
-
     }
 
     @Override
@@ -254,46 +236,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    //퍼미션 관련
-    private boolean isPermissionGranted() {
-        String[] PERMISSIONS_STORAGE = {    // 요청할 권한 목록을 설정
-                Manifest.permission.ACCESS_FINE_LOCATION
-        };
-
-        if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(
-                    MainActivity.this,            // MainActivity 액티비티의 객체 인스턴스를 나타냄
-                    PERMISSIONS_STORAGE,        // 요청할 권한 목록을 설정한 String 배열
-                    MY_PERMISSION_REQUEST_LOCATION    // 사용자 정의 int 상수. 권한 요청 결과를 받을 때
-            );
-            return false;
-        } else
-            return true;
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        switch (requestCode) {
-            case MY_PERMISSION_REQUEST_LOCATION: {
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-                        return;
-                    }
-                    mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-
-                } else {
-                    Toast.makeText(this, "Permission required", Toast.LENGTH_SHORT);
-                }
-            }
-        }
-    }
-
-
-
     @Override
     protected void onStart() {
         Log.i(TAG, "onStart, connect request");
@@ -345,6 +287,10 @@ public class MainActivity extends AppCompatActivity
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, mLocationListener);
     }
 
+    public Toolbar getToolbar(){
+        return toolbar;
+    }
+
     //퍼미션
     void requestPermission() {
         final int REQUEST_EXTERNAL_STORAGE = 1;
@@ -383,4 +329,41 @@ public class MainActivity extends AppCompatActivity
             ActivityCompat.requestPermissions(this, permissions, 1);
         }
     }
+    private boolean isPermissionGranted() {
+        String[] PERMISSIONS_STORAGE = {    // 요청할 권한 목록을 설정
+                Manifest.permission.ACCESS_FINE_LOCATION
+        };
+
+        if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+                    MainActivity.this,            // MainActivity 액티비티의 객체 인스턴스를 나타냄
+                    PERMISSIONS_STORAGE,        // 요청할 권한 목록을 설정한 String 배열
+                    MY_PERMISSION_REQUEST_LOCATION    // 사용자 정의 int 상수. 권한 요청 결과를 받을 때
+            );
+            return false;
+        } else
+            return true;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        switch (requestCode) {
+            case MY_PERMISSION_REQUEST_LOCATION: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+                        return;
+                    }
+                    mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+
+                } else {
+                    Toast.makeText(this, "Permission required", Toast.LENGTH_SHORT);
+                }
+            }
+        }
+    }
+
 }

@@ -48,6 +48,7 @@ public class Restaurant {
     public String getName(){ return name;}
     public double getPoint(){ return point;}
     public URL getPicture(){ return picture;}
+    public String getTel(){ return tel;}
     public String getAdress(){ return adress;}
     public double getLatiude(){ return latiude;}
     public double getLongitude(){ return longitude;}

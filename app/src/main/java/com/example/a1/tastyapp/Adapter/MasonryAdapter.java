@@ -1,17 +1,18 @@
 package com.example.a1.tastyapp.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.a1.tastyapp.Item.Restaurant;
 import com.example.a1.tastyapp.R;
 import com.example.a1.tastyapp.Request.DownloadImageTask;
+import com.example.a1.tastyapp.ResDetailActivity;
 
 import java.util.ArrayList;
 
@@ -75,10 +76,11 @@ public class MasonryAdapter extends RecyclerView.Adapter<MasonryAdapter.MasonryV
             if (position != RecyclerView.NO_POSITION) { // Check if an item was deleted, but the user clicked it before the UI removed it
                 //User user = users.get(position);
                 // We can access the data within the views
-                //Intent i = new Intent(mContext, Restaurant_DetailActivity.class);
-                //mContext.startActivity(i);
+                Intent i = new Intent(mContext, ResDetailActivity.class);
+                i.putExtra("name", nameTextView.getText());
+                mContext.startActivity(i);
 
-                Toast.makeText(mContext, nameTextView.getText(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(mContext, nameTextView.getText(), Toast.LENGTH_SHORT).show();
             }
         }
     }

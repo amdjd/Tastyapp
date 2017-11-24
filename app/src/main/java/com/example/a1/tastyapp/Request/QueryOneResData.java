@@ -1,16 +1,13 @@
 package com.example.a1.tastyapp.Request;
 
 import android.app.Activity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
-import com.example.a1.tastyapp.Adapter.MasonryAdapter;
-import com.example.a1.tastyapp.Adapter.SpacesItemDecoration;
 import com.example.a1.tastyapp.Item.Restaurant;
-import com.example.a1.tastyapp.NavigateActivity;
-import com.example.a1.tastyapp.R;
+import com.example.a1.tastyapp.ResDetailActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,59 +19,43 @@ import java.util.ArrayList;
 
 import static android.content.ContentValues.TAG;
 
+/**
+ * Created by 1 on 2017-11-23.
+ */
 
-public class QueryResData extends PostRequest {
-
-
-    String layoutManager;
-    ArrayList<Restaurant> restaurantItem;
-    public QueryResData(Activity activity) {
+public class QueryOneResData extends PostRequest{
+    public QueryOneResData(Activity activity) {
         super(activity);
     }
-    public QueryResData(Activity activity, String layoutManager){
-        super(activity);
-        this.layoutManager=layoutManager;
-    }
-    @Override
+
     protected void onPreExecute() {
         try {
-            url = new URL(serverURLStr + "/query-res");
+            url = new URL(serverURLStr + "/query-oneres");
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
     }
-
-
-    @Override
     protected void onPostExecute(String jsonString) {
         if (jsonString == null)
             return;
+        ArrayList<Restaurant> restaurants = getArrayListFromJSONString(jsonString);
+        if(!restaurants.isEmpty()) {
+            Restaurant restaurant = restaurants.get(0);
 
-        restaurantItem = getArrayListFromJSONString(jsonString);
-        MasonryAdapter adapter = new MasonryAdapter(activity, restaurantItem);
-        RecyclerView mRecyclerView = (RecyclerView)activity.findViewById(R.id.masonry);
-        if(layoutManager=="LinearLayoutManager") {
+            ResDetailActivity resDetailActivity = (ResDetailActivity) activity;
+            ImageView imageView = resDetailActivity.getImageView();
+            new DownloadImageTask(imageView)
+                    .execute(""+restaurant.getPicture());
+            ArrayList<TextView> textViews = resDetailActivity.getTextView();
+            textViews.get(0).setText(restaurant.getName());
+            textViews.get(1).setText("" + restaurant.getPoint());
+            textViews.get(2).setText(restaurant.getAdress());
+            textViews.get(3).setText(restaurant.getTel());
+            textViews.get(4).setText(restaurant.getBusinesshours());
 
-            //mRecyclerView.setNestedScrollingEnabled(false);
-            LinearLayoutManager linearLayoutManagernew = new LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false){
-                @Override public boolean canScrollHorizontally() { return false; }
-            };
-            mRecyclerView.setLayoutManager(linearLayoutManagernew);
-            adapter = new MasonryAdapter(activity, restaurantItem, R.layout.mylist_item);
-        }
-        else
-            mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
-
-        mRecyclerView.setAdapter(adapter);
-        SpacesItemDecoration decoration = new SpacesItemDecoration(16);
-        mRecyclerView.addItemDecoration(decoration);
-
-        if(activity instanceof NavigateActivity) {
-            NavigateActivity navigateActivity = (NavigateActivity) activity;
-            navigateActivity.setRestaurantMarker(restaurantItem);
-        }
+        }else
+            Toast.makeText(activity, "err", Toast.LENGTH_SHORT).show();
     }
-
 
     private static ArrayList<Restaurant> getArrayListFromJSONString(String jsonString) {
         ArrayList<Restaurant> output = new ArrayList();
@@ -111,4 +92,3 @@ public class QueryResData extends PostRequest {
 
     }
 }
-

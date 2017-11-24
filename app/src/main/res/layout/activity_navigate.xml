@@ -40,7 +40,6 @@
                 android:text="@string/start_updates" />
 
         </LinearLayout>
-
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
@@ -51,6 +50,7 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        />
 
 </RelativeLayout>

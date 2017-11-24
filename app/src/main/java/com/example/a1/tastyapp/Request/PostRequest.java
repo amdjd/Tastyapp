@@ -24,6 +24,7 @@ import javax.net.ssl.HttpsURLConnection;
 public class PostRequest extends AsyncTask<JSONObject, Void, String> {
     Activity activity;
     URL url;
+    final static String serverURLStr="http://13.114.103.74:3000";
 
     public PostRequest(Activity activity) {
         this.activity = activity;

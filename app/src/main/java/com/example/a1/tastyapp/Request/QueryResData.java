@@ -6,7 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 
-import com.example.a1.tastyapp.Adapter.MasonryAdapter;
+import com.example.a1.tastyapp.Adapter.ResAdapter;
 import com.example.a1.tastyapp.Adapter.SpacesItemDecoration;
 import com.example.a1.tastyapp.Item.Restaurant;
 import com.example.a1.tastyapp.NavigateActivity;
@@ -51,7 +51,7 @@ public class QueryResData extends PostRequest {
             return;
 
         restaurantItem = getArrayListFromJSONString(jsonString);
-        MasonryAdapter adapter = new MasonryAdapter(activity, restaurantItem);
+        ResAdapter adapter = new ResAdapter(activity, restaurantItem);
         RecyclerView mRecyclerView = (RecyclerView)activity.findViewById(R.id.masonry);
         if(layoutManager=="LinearLayoutManager") {
 
@@ -60,7 +60,7 @@ public class QueryResData extends PostRequest {
                 @Override public boolean canScrollHorizontally() { return false; }
             };
             mRecyclerView.setLayoutManager(linearLayoutManagernew);
-            adapter = new MasonryAdapter(activity, restaurantItem, R.layout.mylist_item);
+            adapter = new ResAdapter(activity, restaurantItem, R.layout.mylist_item);
         }
         else
             mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));

@@ -21,18 +21,24 @@ public class LoginActivity extends AppCompatActivity {
 
     final static String TAG = "Login";
 
+    EditText edit_user_id;
+    EditText edit_password;
+
+    Button siginBtn;
+    Button singupBtn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        Button siginBtn = (Button) findViewById(R.id.sig_in);
-        Button singupBtn = (Button) findViewById(R.id.sig_up);
+        siginBtn = (Button) findViewById(R.id.sig_in);
+        singupBtn = (Button) findViewById(R.id.sig_up);
         siginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                EditText edit_user_id = (EditText) findViewById(R.id.get_id);
-                EditText edit_password = (EditText) findViewById(R.id.get_pass);
+                edit_user_id = (EditText) findViewById(R.id.get_id);
+                edit_password = (EditText) findViewById(R.id.get_pass);
                 JSONObject postDataParam = new JSONObject();
                 if(edit_user_id.getText().toString().equals("") || edit_password.getText().toString().equals("")) {
                     Toast.makeText(LoginActivity.this, "아이디와 비밀번호를 입력해 주세요.", Toast.LENGTH_SHORT).show();
@@ -63,6 +69,11 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    public String getUser_id(){
+        String user_id= String.valueOf(edit_user_id.getText());
+
+        return user_id;
+    }
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);

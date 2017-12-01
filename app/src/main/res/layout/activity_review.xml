@@ -12,36 +12,44 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:weightSum="1">
 
             <RatingBar
                 android:id="@+id/ratingBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:rating="3"
                 android:isIndicator="false" />
 
             <android.support.v7.widget.AppCompatEditText
+                android:id="@+id/memo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="top|left"
                 android:inputType="textMultiLine"
-                android:scrollHorizontally="false"/>
+                android:scrollHorizontally="false"
+                android:layout_weight="0.69" />
 
             <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:id="@+id/reviewImage"
+                android:layout_width="wrap_content"
+                android:layout_height="113dp"
+                android:layout_gravity="center"/>
 
         </LinearLayout>
 
             <Button
+                android:id="@+id/getImageBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentBottom="true"
                 android:text="사진 추가"/>
+
             <android.support.design.widget.FloatingActionButton
-                android:id="@+id/fab2"
+                android:id="@+id/reviewFab"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
@@ -49,11 +57,12 @@
                 android:layout_margin="@dimen/fab_margin"
                 android:src="@android:drawable/ic_dialog_email" />
             <Button
+                android:id="@+id/backButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight= "true"
                 android:layout_alignParentBottom="true"
-                android:text="뒤로가기"/>
+                android:text="사진 찍기"/>
     </RelativeLayout>
 
 </android.support.constraint.ConstraintLayout>

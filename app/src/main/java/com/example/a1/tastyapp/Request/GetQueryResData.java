@@ -34,7 +34,7 @@ public class GetQueryResData extends GetRequest {
     ListViewAdapter adapter;
     ArrayList<Restaurant> restaurantsList;
 
-    public GetQueryResData(Activity activity) {
+     public GetQueryResData(Activity activity) {
         super(activity);
     }
 
@@ -56,10 +56,13 @@ public class GetQueryResData extends GetRequest {
             @Override
             public void onItemClick(AdapterView parent, View v, int position, long id) {
                 Restaurant item = (Restaurant) parent.getItemAtPosition(position) ;
-
-                Intent i = new Intent(activity, ResDetailActivity.class);
-                i.putExtra("name", item.getName());
-                activity.startActivity(i);
+                if(activity instanceof MainActivity) {
+                    MainActivity mainActivity = (MainActivity)activity;
+                    Intent i = new Intent(mainActivity, ResDetailActivity.class);
+                    i.putExtra("name", item.getName());
+                    i.putExtra("user_id", mainActivity.getUser_id());
+                    activity.startActivity(i);
+                }
             }
         }) ;
 

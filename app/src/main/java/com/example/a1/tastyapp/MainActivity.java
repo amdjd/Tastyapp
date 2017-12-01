@@ -44,19 +44,27 @@ public class MainActivity extends AppCompatActivity
     private LocationListener mLocationListener;
     private boolean mRequestingLocationUpdates=true;
 
-    Toolbar toolbar;
+
 
     LocationRequest locRequest = new LocationRequest().setInterval(10000)
             .setFastestInterval(5000)
             .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
+    Toolbar toolbar;
+    String user_id=null;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Intent intent = getIntent();
+        user_id = intent.getExtras().getString("user_id");
+
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         toolbar.inflateMenu(R.menu.search);
 
         new GetQueryResData(MainActivity.this).execute();
@@ -289,6 +297,10 @@ public class MainActivity extends AppCompatActivity
 
     public Toolbar getToolbar(){
         return toolbar;
+    }
+
+    public String getUser_id(){
+        return user_id;
     }
 
     //퍼미션

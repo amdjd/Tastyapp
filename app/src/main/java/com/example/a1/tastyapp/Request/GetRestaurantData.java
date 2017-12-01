@@ -6,7 +6,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
-import com.example.a1.tastyapp.Adapter.MasonryAdapter;
+import com.example.a1.tastyapp.Adapter.ResAdapter;
 import com.example.a1.tastyapp.Adapter.SpacesItemDecoration;
 import com.example.a1.tastyapp.Item.Restaurant;
 import com.example.a1.tastyapp.R;
@@ -26,7 +26,7 @@ import java.util.ArrayList;
 public class GetRestaurantData extends GetRequest {
     String layoutManager;
 
-    MasonryAdapter adapter;
+    ResAdapter adapter;
     RecyclerView mRecyclerView;
     public GetRestaurantData(Activity activity) {
         super(activity);
@@ -44,12 +44,12 @@ public class GetRestaurantData extends GetRequest {
 
         ArrayList<Restaurant> ImageItem = getArrayListFromJSONString(jsonString);
 
-        adapter = new MasonryAdapter(activity, ImageItem);
+        adapter = new ResAdapter(activity, ImageItem);
         mRecyclerView = (RecyclerView)activity.findViewById(R.id.masonry);
 
         if(layoutManager=="LinearLayoutManager") {
             mRecyclerView.setLayoutManager(new LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false));
-            adapter = new MasonryAdapter(activity, ImageItem, R.layout.mylist_item);
+            adapter = new ResAdapter(activity, ImageItem, R.layout.mylist_item);
         }
         else
             mRecyclerView.setLayoutManager(new GridLayoutManager(activity,2));

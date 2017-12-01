@@ -16,7 +16,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.a1.tastyapp.Request.PostReviewRes;
 import com.example.a1.tastyapp.Request.QueryOneResData;
 
 import org.json.JSONException;
@@ -37,6 +39,7 @@ public class ResDetailActivity extends AppCompatActivity
     Button buttonReview;
 
     String name;
+    String user_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +48,7 @@ public class ResDetailActivity extends AppCompatActivity
 
         Intent intent = getIntent();
         name = intent.getExtras().getString("name");
+        user_id = intent.getExtras().getString("user_id");
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -80,6 +84,7 @@ public class ResDetailActivity extends AppCompatActivity
                     public void onClick(View v) {
                         Intent i = new Intent(ResDetailActivity.this, ReviewActivity.class);
                         i.putExtra("name", name);
+                        i.putExtra("user_id", user_id);
                         ResDetailActivity.this.startActivity(i);
                     }
                 }
@@ -91,6 +96,7 @@ public class ResDetailActivity extends AppCompatActivity
             e.printStackTrace();
         }
         new QueryOneResData(ResDetailActivity.this).execute(postDataParam);
+        new PostReviewRes(ResDetailActivity.this).execute(postDataParam);
     }
 
     public void textresTELonClick(View v)
@@ -103,6 +109,10 @@ public class ResDetailActivity extends AppCompatActivity
         ImageView output = null;
         output = imageView_res;
         return output;
+    }
+
+    public String getUser_id(){
+        return user_id;
     }
 
     public ArrayList<TextView> getTextView(){

@@ -18,6 +18,7 @@ import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatEditText;
 import android.util.Log;
@@ -39,12 +40,10 @@ public class ReviewActivity extends AppCompatActivity {
 
     private static final int GALLERY_CODE = 0;
     private static final int CAMERA_CODE = 1;
-
+    String mCurrentPhotoPath;
     String imagePath=null;
     static String uploadFilePath = "/sdcard/Download/";
 
-    private String mPhotoFileName = null;
-    private File mPhotoFile =null;
 
     final int REQUEST_READ_FROM_EXTERNAL_STORAGE = 1;
 
@@ -149,7 +148,20 @@ public class ReviewActivity extends AppCompatActivity {
                     sendPicture(data); //갤러리에서 가져오기
                     break;
                 case CAMERA_CODE:
-                    sendPicture(data); //카메라에서 가져오기
+                    imagePath = mCurrentPhotoPath; // path 경로
+
+                    ExifInterface exif = null;
+                    try {
+                        exif = new ExifInterface(imagePath);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    int exifOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+                    int exifDegree = exifOrientationToDegrees(exifOrientation);
+
+                    Bitmap bitmap = BitmapFactory.decodeFile(imagePath);//경로를 통해 비트맵으로 전환
+                    imageView.setImageBitmap(rotate(bitmap, exifDegree));//이미지 뷰에 비트맵 넣기
+
                     break;
 
                 default:
@@ -157,6 +169,22 @@ public class ReviewActivity extends AppCompatActivity {
             }
 
         }
+    }
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        mCurrentPhotoPath = image.getAbsolutePath();
+        return image;
     }
 
     private void sendPicture(Intent data) {
@@ -179,22 +207,25 @@ public class ReviewActivity extends AppCompatActivity {
 
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
+        // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            mPhotoFileName = "IMG"+currentDateFormat()+".jpg";
-            mPhotoFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),mPhotoFileName);
-
-            if (mPhotoFile !=null) {
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(mPhotoFile));
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+                Toast.makeText(ReviewActivity.this, ""+mCurrentPhotoPath, Toast.LENGTH_SHORT).show();
+            } catch (IOException ex) {
+                Toast.makeText(ReviewActivity.this, "이미지 처리 오류! 다시 시도해주세요.", Toast.LENGTH_SHORT).show();              finish();
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(this,
+                        "com.example.a1.tastyapp.provider",
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, CAMERA_CODE);
-            } else
-                Toast.makeText(getApplicationContext(), "file null", Toast.LENGTH_SHORT).show();
+            }
         }
-    }
-    private String currentDateFormat(){
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_HH_mm_ss");
-        String  currentTimeStamp = dateFormat.format(new Date());
-        return currentTimeStamp;
     }
 
     public Bitmap rotate(Bitmap src, float degree) {
@@ -231,11 +262,11 @@ public class ReviewActivity extends AppCompatActivity {
     private void selectPhoto() {
         dispatchTakePictureIntent();
 
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+/*        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             // resolveActivity(): takePictureIntent를 처리할 수 있는 (사진찍기) 액티비티 반환
             startActivity(takePictureIntent);
-        }
+        }*/
     }
     private void uploadFile() {
         uploadFilePath=imagePath;

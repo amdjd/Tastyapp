@@ -3,46 +3,69 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#50911100"
+    >
 
     <LinearLayout
         android:layout_width="368dp"
-        android:layout_height="551dp"
+        android:layout_height="576dp"
         android:gravity="center"
-        android:layout_marginHorizontal="50dp"
+        android:padding="30dp"
         android:orientation="vertical"
         tools:layout_editor_absoluteY="8dp"
-        tools:layout_editor_absoluteX="8dp">
-
+        tools:layout_editor_absoluteX="8dp"
+        android:weightSum="1">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5" />
         <ImageView
             android:id="@+id/login_image"
+            android:layout_width="229dp"
+            android:layout_height="112dp"
+            android:src="@drawable/orange"
+            android:layout_weight="0.39" />
+
+        <TextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_weight="0.3" />
 
         <EditText
             android:id="@+id/get_id"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="ID"/>
+            android:hint="ID"
+            android:inputType="textVisiblePassword"
+            android:imeOptions="actionNext" />
 
         <EditText
             android:id="@+id/get_pass"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="PASSWORD"
-            android:password="true"/>
-
+            android:inputType="textPassword"
+            android:imeOptions="actionDone"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0." />
         <Button
             android:id="@+id/sig_in"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Sign in" />
+            android:text="Sign in"
+            android:textSize="20dp"
+            android:textColor="#000000"
+            android:background="@drawable/corner"/>
 
 
         <Button
             android:id="@+id/sig_up"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="#00000000"
             android:text="가입하기" />
     </LinearLayout>
 

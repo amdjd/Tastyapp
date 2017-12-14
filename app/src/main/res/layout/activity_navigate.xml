@@ -17,17 +17,17 @@
         android:layout_height="wrap_content"
         android:baselineAligned="false"
         android:orientation="vertical"
+        android:id="@+id/linearLayout2"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:id="@+id/linearLayout2">
+        android:layout_alignParentStart="true">
 
         <LinearLayout
             android:id="@+id/linearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:baselineAligned="false"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
             <Button
                 android:id="@+id/start_updates_button"
@@ -36,9 +36,18 @@
                 android:layout_marginEnd="10dp"
                 android:layout_marginRight="10dp"
                 android:gravity="center"
+                android:background="@drawable/corner"
                 android:onClick="startUpdatesButtonHandler"
-                android:text="@string/start_updates" />
-
+                android:text="보고있는 위치 탐색" />
+            <Button
+                android:id="@+id/navi_distancebtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:background="@drawable/corner"
+                android:onClick="startUpdatesButtonHandler"
+                android:text="반경 설정" />
         </LinearLayout>
     </LinearLayout>
 
@@ -50,7 +59,6 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        />
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>

@@ -3,47 +3,69 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#50911100">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="368dp"
+        android:layout_height="551dp"
         android:gravity="center"
         android:layout_marginHorizontal="50dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        tools:layout_editor_absoluteY="8dp"
+        tools:layout_editor_absoluteX="8dp"
+        android:padding="20dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5" />
+        <ImageView
+            android:id="@+id/login_image"
+            android:layout_width="229dp"
+            android:layout_height="112dp"
+            android:src="@drawable/orange"
+            android:layout_weight="0.39" />
 
         <EditText
             android:id="@+id/put_id"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="ID"/>
+            android:hint="ID"
+            android:inputType="textVisiblePassword"
+            android:imeOptions="actionNext"/>
 
 
         <EditText
             android:id="@+id/put_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Email"/>
+            android:hint="Email"
+            android:inputType="textVisiblePassword"
+            android:imeOptions="actionNext"/>
 
         <EditText
             android:id="@+id/put_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="PassWord"
-            android:password="true"/>
+            android:inputType="textPassword"
+            android:imeOptions="actionNext"/>
 
         <EditText
             android:id="@+id/put_password2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Check PassWord"
-            android:password="true"/>
+            android:inputType="textPassword"
+            android:imeOptions="actionNext"/>
 
         <EditText
             android:id="@+id/put_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Name"/>
+            android:hint="Name"
+            android:inputType="text"
+            android:imeOptions="actionDone"/>
 
 
 
@@ -51,7 +73,8 @@
             android:id="@+id/regist_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="registeration" />
+            android:text="registeration"
+            android:background="@drawable/corner"/>
 
     </LinearLayout>
 

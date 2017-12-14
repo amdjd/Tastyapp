@@ -60,7 +60,7 @@ public class ListViewAdapter extends BaseAdapter {
             holder = new ViewHolder();
             view = inflater.inflate(R.layout.listview_item, null);
             // Locate the TextViews in listview_item.xml
-            holder.name = (TextView) view.findViewById(R.id.name);
+            holder.name = (TextView) view.findViewById(R.id.listview_name);
             view.setTag(holder);
         } else {
             holder = (ViewHolder) view.getTag();

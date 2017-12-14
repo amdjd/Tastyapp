@@ -8,6 +8,8 @@ import android.util.Log;
 import com.example.a1.tastyapp.Adapter.ReivewAdapter;
 import com.example.a1.tastyapp.Adapter.SpacesItemDecoration;
 import com.example.a1.tastyapp.Item.Review;
+import com.example.a1.tastyapp.MainActivity;
+import com.example.a1.tastyapp.NavigateActivity;
 import com.example.a1.tastyapp.R;
 
 import org.json.JSONArray;
@@ -29,6 +31,8 @@ public class PostReviewRes extends PostRequest{
 
     String layoutManager;
     ArrayList<Review> restaurantItem;
+    SpacesItemDecoration decoration;
+
     public PostReviewRes(Activity activity) {
         super(activity);
     }
@@ -59,8 +63,29 @@ public class PostReviewRes extends PostRequest{
         adapter = new ReivewAdapter(activity, restaurantItem, R.layout.review_item);
         mRecyclerView.setAdapter(adapter);
 
-        SpacesItemDecoration decoration = new SpacesItemDecoration(16);
-        mRecyclerView.addItemDecoration(decoration);
+        if(activity instanceof MainActivity){
+            MainActivity mainActivity = (MainActivity) activity;
+            decoration=mainActivity.getDecoration();
+            if(decoration==null) {
+                decoration = new SpacesItemDecoration(16);
+                mainActivity.setDecoration(decoration);
+                mRecyclerView.addItemDecoration(decoration);
+            }
+        }
+        if(activity instanceof NavigateActivity){
+            NavigateActivity navigateActivity = (NavigateActivity) activity;
+            decoration=navigateActivity.getDecoration();
+            if(decoration==null) {
+                decoration = new SpacesItemDecoration(16);
+                navigateActivity.setDecoration(decoration);
+                mRecyclerView.addItemDecoration(decoration);
+            }
+        }
+        /*if(decoration==null) {
+            decoration = new SpacesItemDecoration(16);
+            mRecyclerView.addItemDecoration(decoration);
+        }*/
+        adapter.notifyDataSetChanged();
     }
 
 
@@ -79,7 +104,7 @@ public class PostReviewRes extends PostRequest{
                         jsonObject.getString("resname"),
                         jsonObject.getDouble("point"),
                         jsonObject.getString("memo"),
-                        new URL("http://13.114.103.74:3000/"+jsonObject.getString("picture")),
+                        new URL("http:/13.114.103.74:3000/"+jsonObject.getString("picture")),
                         jsonObject.getString("date")
                 );
                 output.add(review);

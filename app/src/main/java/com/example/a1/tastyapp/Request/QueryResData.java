@@ -9,6 +9,7 @@ import android.util.Log;
 import com.example.a1.tastyapp.Adapter.ResAdapter;
 import com.example.a1.tastyapp.Adapter.SpacesItemDecoration;
 import com.example.a1.tastyapp.Item.Restaurant;
+import com.example.a1.tastyapp.MainActivity;
 import com.example.a1.tastyapp.NavigateActivity;
 import com.example.a1.tastyapp.R;
 
@@ -28,6 +29,8 @@ public class QueryResData extends PostRequest {
 
     String layoutManager;
     ArrayList<Restaurant> restaurantItem;
+    SpacesItemDecoration decoration;
+
     public QueryResData(Activity activity) {
         super(activity);
     }
@@ -66,13 +69,35 @@ public class QueryResData extends PostRequest {
             mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
 
         mRecyclerView.setAdapter(adapter);
-        SpacesItemDecoration decoration = new SpacesItemDecoration(16);
-        mRecyclerView.addItemDecoration(decoration);
 
+        if(activity instanceof MainActivity){
+            MainActivity mainActivity = (MainActivity) activity;
+            mainActivity.geoTitle();
+            decoration=mainActivity.getDecoration();
+            if(decoration==null) {
+                decoration = new SpacesItemDecoration(16);
+                mainActivity.setDecoration(decoration);
+                mRecyclerView.addItemDecoration(decoration);
+            }
+        }
+        if(activity instanceof NavigateActivity){
+            NavigateActivity navigateActivity = (NavigateActivity) activity;
+            decoration=navigateActivity.getDecoration();
+            if(decoration==null) {
+                decoration = new SpacesItemDecoration(16);
+                navigateActivity.setDecoration(decoration);
+                mRecyclerView.addItemDecoration(decoration);
+            }
+        }
+ /*       if(decoration==null) {
+            decoration = new SpacesItemDecoration(16);
+            mRecyclerView.addItemDecoration(decoration);
+        }*/
         if(activity instanceof NavigateActivity) {
             NavigateActivity navigateActivity = (NavigateActivity) activity;
             navigateActivity.setRestaurantMarker(restaurantItem);
         }
+        adapter.notifyDataSetChanged();
     }
 
 
@@ -89,13 +114,13 @@ public class QueryResData extends PostRequest {
                 Restaurant restaurant = new Restaurant(jsonObject.getString("_id"),
                         jsonObject.getDouble("point"),
                         jsonObject.getString("name"),
-                        new URL("http:/13.114.103.74/"+jsonObject.getString("picture")),
+                        new URL("http:/13.124.86.208:3000/"+jsonObject.getString("picture")),
                         jsonObject.getString("tel"),
                         jsonObject.getString("address"),
                         Double.parseDouble(jsonObject.getJSONObject("loc").getJSONArray("coordinates").get(0).toString()),
                         Double.parseDouble(jsonObject.getJSONObject("loc").getJSONArray("coordinates").get(1).toString()),
                         jsonObject.getString("businesshours"),
-                        jsonObject.getString("menu")
+                        jsonObject.getString("type")
                 );
                 output.add(restaurant);
             }

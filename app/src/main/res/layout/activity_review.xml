@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#15911100"
     tools:context="com.example.a1.tastyapp.ReviewActivity">
 
     <RelativeLayout
@@ -30,7 +31,8 @@
                 android:gravity="top|left"
                 android:inputType="textMultiLine"
                 android:scrollHorizontally="false"
-                android:layout_weight="0.69" />
+                android:layout_weight="0.69"
+                android:imeOptions="actionNext"/>
 
             <ImageView
                 android:id="@+id/reviewImage"

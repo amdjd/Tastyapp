@@ -1,6 +1,7 @@
 package com.example.a1.tastyapp.Request;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -36,11 +37,19 @@ public class UploadReview extends AsyncTask<String, String, String> {
 
     final String upLoadServerUri = serverURL + "/api/photo";
     Activity activity;
-
+    ProgressDialog mProgressDialog;
     public UploadReview(Activity activity) {
         this.activity = activity;
     }
 
+    @Override
+    protected void onPreExecute() {
+        mProgressDialog = new ProgressDialog(activity);
+        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        mProgressDialog.setTitle("업로드 중입니다.");
+        mProgressDialog.setCanceledOnTouchOutside(false);
+        mProgressDialog.show();
+    }
 
     @Override
     protected String doInBackground(String... objects) {
@@ -142,6 +151,9 @@ public class UploadReview extends AsyncTask<String, String, String> {
 
     @Override
     protected void onPostExecute(String result) {
+        if(mProgressDialog.isShowing()){
+            mProgressDialog.dismiss();
+        }
         if (activity instanceof ReviewActivity) {
             ReviewActivity reviewActivity = (ReviewActivity) activity;
 
@@ -161,6 +173,7 @@ public class UploadReview extends AsyncTask<String, String, String> {
             else
                 Toast.makeText(activity, "인터넷 연결을 확인하세요.", Toast.LENGTH_SHORT).show();
         }
+
     }
 
     private boolean isNetworkAvailable() {

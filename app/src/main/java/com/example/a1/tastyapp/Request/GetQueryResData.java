@@ -46,7 +46,9 @@ public class GetQueryResData extends GetRequest {
         restaurantsList = getArrayListFromJSONString(jsonString);
 
         list = (ListView) activity.findViewById(R.id.listview);
+
         list.setVisibility(View.INVISIBLE);
+
         adapter = new ListViewAdapter(activity, restaurantsList);
 
         // Binds the Adapter to the ListView
@@ -84,7 +86,6 @@ public class GetQueryResData extends GetRequest {
             }
 
         });
-
     }
 
     protected ArrayList<Restaurant> getArrayListFromJSONString(String jsonString) {
@@ -100,14 +101,14 @@ public class GetQueryResData extends GetRequest {
                 Restaurant restaurant = new Restaurant(jsonObject.getString("_id"),
                         jsonObject.getDouble("point"),
                         jsonObject.getString("name"),
-                        new URL("http:/13.114.103.74/"+jsonObject.getString("picture")),
+                        new URL("http:/13.124.86.208:3000/"+jsonObject.getString("picture")),
                         jsonObject.getString("tel"),
                         jsonObject.getString("address"),
                         Double.parseDouble(jsonObject.getJSONObject("loc").getJSONArray("coordinates").get(0).toString()),
                         Double.parseDouble(jsonObject.getJSONObject("loc").getJSONArray("coordinates").get(1).toString()),
                         //jsonObject.getDouble("longitude"),
                         jsonObject.getString("businesshours"),
-                        jsonObject.getString("businesshours")
+                        jsonObject.getString("type")
                 );
                 output.add(restaurant);
             }

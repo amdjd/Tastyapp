@@ -54,6 +54,7 @@ public class ReivewAdapter extends RecyclerView.Adapter<ReivewAdapter.MasonryVie
         holder.memoTextView.setText(""+mItems.get(position).getMemo());
     }
 
+
     @Override
     public int getItemCount() {
         return mItems.size();

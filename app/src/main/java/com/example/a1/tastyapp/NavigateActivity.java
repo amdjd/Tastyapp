@@ -1,18 +1,22 @@
 package com.example.a1.tastyapp;
 
 import android.Manifest;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.a1.tastyapp.Adapter.SpacesItemDecoration;
 import com.example.a1.tastyapp.Item.Restaurant;
 import com.example.a1.tastyapp.Request.QueryResData;
 import com.google.android.gms.common.ConnectionResult;
@@ -41,15 +45,19 @@ public class NavigateActivity extends AppCompatActivity implements OnMapReadyCal
     final private int MY_PERMISSION_REQUEST_LOCATION = 100;
     // UI Widgets.
     private Button mStartUpdatesButton;
-    private TextView mPrecisionTextView;
-    private TextView mLatitudeTextView;
-    private TextView mLongitudeTextView;
+    private Button distanceButton;
 
     private GoogleApiClient mGoogleApiClient;
     private GoogleMap mGoogleMap = null;
     private Location mCurrentLocation;
     private LocationListener mLocationListener;
     private MarkerOptions makerOptions;
+
+    private SpacesItemDecoration decoration;
+
+    private String user_id = "";
+    private double distance = 3;
+
 
     LatLng currentPosition;
     List<Marker> previous_marker = null;
@@ -61,9 +69,26 @@ public class NavigateActivity extends AppCompatActivity implements OnMapReadyCal
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_navigate);
 
+
+
+
+        Intent intent = getIntent();
+        user_id = intent.getExtras().getString("user_id");
+
+
+        distanceButton = (Button) findViewById(R.id.navi_distancebtn);
         mStartUpdatesButton = (Button) findViewById(R.id.start_updates_button);
+
+        distanceButton.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DialogSelectOption();
+            }
+        });
 
         previous_marker = new ArrayList<Marker>();
 
@@ -85,7 +110,7 @@ public class NavigateActivity extends AppCompatActivity implements OnMapReadyCal
     public void startUpdatesButtonHandler(View view) {
         if (mGoogleApiClient.isConnected() && isPermissionGranted()) {
             startLocationUpdates();
-            QueryData(0.5);
+            QueryData(distance);
         }
     }
 
@@ -94,9 +119,13 @@ public class NavigateActivity extends AppCompatActivity implements OnMapReadyCal
         JSONObject postDataParam = new JSONObject();
         double latitude = 0.0;
         double longitude = 0.0;
-        if (mCurrentLocation != null) {
+/*        if (mCurrentLocation != null) {
             latitude = mCurrentLocation.getLatitude();
             longitude = mCurrentLocation.getLongitude();
+        }*/
+        if (mCurrentLocation != null) {
+            latitude = mGoogleMap.getCameraPosition().target.latitude;
+            longitude = mGoogleMap.getCameraPosition().target.longitude;
         }
         try {
             postDataParam.put("distance", distance);
@@ -112,22 +141,24 @@ public class NavigateActivity extends AppCompatActivity implements OnMapReadyCal
     }
 
     public void setRestaurantMarker(ArrayList<Restaurant> restaurant) {
+        mGoogleMap.clear();
         for (int i = 0; restaurant.size() > i; i++) {
             MarkerOptions makerOptions = new MarkerOptions();
             makerOptions
                     .position(new LatLng(restaurant.get(i).getLongitude(), restaurant.get(i).getLatiude()))
-                    .snippet(String.valueOf(i+1))
+                    .snippet(String.valueOf(i + 1))
                     .title(restaurant.get(i).getName());
 
             mGoogleMap.addMarker(makerOptions);
         }
     }
+
     private void startLocationUpdates() {
         mLocationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
                 currentPosition
-                        = new LatLng( location.getLatitude(), location.getLongitude());
+                        = new LatLng(location.getLatitude(), location.getLongitude());
                 mCurrentLocation = location;
                 //updateUI();
             }
@@ -140,7 +171,7 @@ public class NavigateActivity extends AppCompatActivity implements OnMapReadyCal
 
             return;
         }
-        mGoogleMap.setMyLocationEnabled(true);
+
     }
 
     //
@@ -148,17 +179,35 @@ public class NavigateActivity extends AppCompatActivity implements OnMapReadyCal
 
         mGoogleMap = gMap;
 
-        LatLng sydney;
+        LatLng seoul;
         // Add a marker in Sydney and move the camera
         if (mCurrentLocation != null) {
-            sydney = currentPosition;
-        }
-        else
-            sydney = new LatLng(37.5391507, 127.0856099);
+            seoul = currentPosition;
+        } else
+            seoul = new LatLng(37.5642135, 127.0016985);
         // move the camera
-        gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 15));
+        gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(seoul, 10));
 
         mGoogleMap.setOnMarkerClickListener(this);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        mGoogleMap.setMyLocationEnabled(true);
+        mGoogleMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener(){
+            @Override
+            public boolean onMyLocationButtonClick()
+            {
+                QueryData(3);
+                return false;
+            }
+        });
     }
 
     @Override
@@ -204,6 +253,44 @@ public class NavigateActivity extends AppCompatActivity implements OnMapReadyCal
     }
 */
 
+    private void DialogSelectOption() {
+        final String items[] = { "100m","300m", "500m", "1km", "3km" };
+        AlertDialog.Builder ab = new AlertDialog.Builder(NavigateActivity.this);
+        ab.setTitle("반경");
+        ab.setSingleChoiceItems(items, -1,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        if(whichButton==0) {
+                            distance = 0.1;
+                            QueryData(distance);
+                        }
+                        if(whichButton==1) {
+                            distance = 0.3;
+                            QueryData(distance);
+                        }
+                        if(whichButton==2) {
+                            distance = 0.5;
+                            QueryData(distance);
+                        }
+                        if(whichButton==3) {
+                            distance = 1;
+                            QueryData(distance);
+                        }
+                        if(whichButton==4) {
+                            distance = 3;
+                            QueryData(distance);
+                        }
+                    }
+                }).setPositiveButton("닫기",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        dialog.cancel();
+                    }
+                });
+        ab.show();
+    }
+
+
     @Override
     protected void onStart() {
         Log.i(TAG,"onStart, connect request");
@@ -213,7 +300,16 @@ public class NavigateActivity extends AppCompatActivity implements OnMapReadyCal
 
 
 
+    public String getUser_id(){
+        return user_id;
+    }
 
+    public SpacesItemDecoration getDecoration(){
+        return decoration;
+    }
+    public void setDecoration(SpacesItemDecoration decoration){
+        this.decoration=decoration;
+    }
     //퍼미션 관련
     private boolean isPermissionGranted() {
         String[] PERMISSIONS_STORAGE = {    // 요청할 권한 목록을 설정

@@ -9,6 +9,8 @@ import android.util.Log;
 import com.example.a1.tastyapp.Adapter.ResAdapter;
 import com.example.a1.tastyapp.Adapter.SpacesItemDecoration;
 import com.example.a1.tastyapp.Item.Restaurant;
+import com.example.a1.tastyapp.MainActivity;
+import com.example.a1.tastyapp.NavigateActivity;
 import com.example.a1.tastyapp.R;
 
 import org.json.JSONArray;
@@ -28,6 +30,8 @@ public class GetRestaurantData extends GetRequest {
 
     ResAdapter adapter;
     RecyclerView mRecyclerView;
+    SpacesItemDecoration decoration;
+
     public GetRestaurantData(Activity activity) {
         super(activity);
     }
@@ -55,9 +59,28 @@ public class GetRestaurantData extends GetRequest {
             mRecyclerView.setLayoutManager(new GridLayoutManager(activity,2));
 
         mRecyclerView.setAdapter(adapter);
-        SpacesItemDecoration decoration = new SpacesItemDecoration(16);
-        mRecyclerView.addItemDecoration(decoration);
 
+
+        if(activity instanceof MainActivity){
+            MainActivity mainActivity = (MainActivity) activity;
+            decoration=mainActivity.getDecoration();
+            if(decoration==null) {
+                decoration = new SpacesItemDecoration(16);
+                mainActivity.setDecoration(decoration);
+                mRecyclerView.addItemDecoration(decoration);
+            }
+        }
+        if(activity instanceof NavigateActivity){
+            NavigateActivity navigateActivity = (NavigateActivity) activity;
+            decoration=navigateActivity.getDecoration();
+            if(decoration==null) {
+                decoration = new SpacesItemDecoration(16);
+                navigateActivity.setDecoration(decoration);
+                mRecyclerView.addItemDecoration(decoration);
+            }
+        }
+
+        adapter.notifyDataSetChanged();
     }
 
 
@@ -74,14 +97,14 @@ public class GetRestaurantData extends GetRequest {
                 Restaurant restaurant = new Restaurant(jsonObject.getString("_id"),
                         jsonObject.getDouble("point"),
                         jsonObject.getString("name"),
-                        new URL("http:/13.114.103.74/"+jsonObject.getString("picture")),
+                        new URL("http:/13.124.86.208:3000/"+jsonObject.getString("picture")),
                         jsonObject.getString("tel"),
                         jsonObject.getString("address"),
                         Double.parseDouble(jsonObject.getJSONObject("loc").getJSONArray("coordinates").get(0).toString()),
                         Double.parseDouble(jsonObject.getJSONObject("loc").getJSONArray("coordinates").get(1).toString()),
                         //jsonObject.getDouble("longitude"),
                         jsonObject.getString("businesshours"),
-                        jsonObject.getString("businesshours")
+                        jsonObject.getString("type")
                         );
                 output.add(restaurant);
             }

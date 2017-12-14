@@ -16,7 +16,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.a1.tastyapp.Request.PostReviewRes;
 import com.example.a1.tastyapp.Request.QueryOneResData;
@@ -35,6 +34,8 @@ public class ResDetailActivity extends AppCompatActivity
     TextView textresAdress ;
     TextView textresTEL ;
     TextView textBusinesshours;
+    TextView textresType;
+    TextView idText;
     Button buttonWant;
     Button buttonReview;
 
@@ -68,7 +69,9 @@ public class ResDetailActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-
+        View header=navigationView.getHeaderView(0);
+        idText = (TextView)header.findViewById(R.id.navUserId);
+        idText.setText(user_id+" 님");
         imageView_res = (ImageView)findViewById(R.id.imageView_res);
 
         textresName = (TextView)findViewById(R.id.textresName);
@@ -76,7 +79,7 @@ public class ResDetailActivity extends AppCompatActivity
         textresAdress = (TextView)findViewById(R.id.textresAdress);
         textresTEL = (TextView)findViewById(R.id.textresTEL);
         textBusinesshours = (TextView)findViewById(R.id.textBusinesshours);
-
+        textresType = (TextView)findViewById(R.id.res_type);
         buttonWant = (Button)findViewById(R.id.buttonWant);
         buttonReview = (Button)findViewById(R.id.buttonReview);
         buttonReview.setOnClickListener(
@@ -122,6 +125,7 @@ public class ResDetailActivity extends AppCompatActivity
         output.add(textresAdress);
         output.add(textresTEL);
         output.add(textBusinesshours);
+        output.add(textresType);
         return output;
     }
 
@@ -163,18 +167,28 @@ public class ResDetailActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        if (id == R.id.nav_main) {
+            Intent intent = new Intent(getApplicationContext(),
+                    MainActivity.class);
+            intent.putExtra("user_id", user_id);
+            startActivity(intent);
+        } else if (id == R.id.nav_map) {
+            Intent intent = new Intent(getApplicationContext(),
+                    NavigateActivity.class);
+            intent.putExtra("user_id", user_id);
+            startActivity(intent);
+        } else if (id == R.id.nav_res) {
+            /*Intent intent = new Intent(getApplicationContext(),
+                    NavigateActivity.class);
+            startActivity(intent);*/
+        } else if (id == R.id.nav_review) {
+            /*Intent intent = new Intent(getApplicationContext(),
+                    NavigateActivity.class);
+            startActivity(intent);*/
+        }else if (id == R.id.nav_logout) {
+            Intent intent = new Intent(getApplicationContext(),
+                    LoginActivity.class);
+            startActivity(intent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

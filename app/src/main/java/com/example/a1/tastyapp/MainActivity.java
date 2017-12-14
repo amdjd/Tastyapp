@@ -3,6 +3,8 @@ package com.example.a1.tastyapp;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -18,10 +20,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.a1.tastyapp.Adapter.SpacesItemDecoration;
 import com.example.a1.tastyapp.Request.GetQueryResData;
 import com.example.a1.tastyapp.Request.GetRestaurantData;
 import com.example.a1.tastyapp.Request.QueryResData;
@@ -34,6 +38,10 @@ import com.google.android.gms.location.LocationServices;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     final private String TAG = "MainActivity";
@@ -43,15 +51,19 @@ public class MainActivity extends AppCompatActivity
     private Location mCurrentLocation;
     private LocationListener mLocationListener;
     private boolean mRequestingLocationUpdates=true;
-
-
+    private SpacesItemDecoration decoration;
+    String title="#Place";
+    String sort = "point";
+    TextView bottomSheet_Text;
+    SeekBar sb;
+    TextView idText;
 
     LocationRequest locRequest = new LocationRequest().setInterval(10000)
             .setFastestInterval(5000)
             .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
     Toolbar toolbar;
-    String user_id=null;
+    String user_id;
 
 
 
@@ -60,6 +72,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        requestPermission();
         Intent intent = getIntent();
         user_id = intent.getExtras().getString("user_id");
 
@@ -67,7 +80,7 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         toolbar.inflateMenu(R.menu.search);
 
-        new GetQueryResData(MainActivity.this).execute();
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -77,6 +90,7 @@ public class MainActivity extends AppCompatActivity
                         .setAction("Action", null).show();*/
                 Intent intent = new Intent(getApplicationContext(),
                         NavigateActivity.class);
+                intent.putExtra("user_id", user_id);
                 startActivity(intent);
             }
         });
@@ -89,7 +103,34 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        requestPermission();
+
+        View header=navigationView.getHeaderView(0);
+        idText = (TextView)header.findViewById(R.id.navUserId);
+        idText.setText(user_id+" 님");
+
+        new GetQueryResData(MainActivity.this).execute();
+
+        bottomSheet_Text = (TextView)findViewById(R.id.bottomSheet_Text);
+        Button bottomSheet_distanceSort = (Button)findViewById(R.id.bottomSheet_distanceSort);
+        Button bottomSheet_pointSort = (Button)findViewById(R.id.bottomSheet_pointSort);
+
+        bottomSheet_distanceSort.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sort="distance";
+                bottomSheet_Text.setText("거리순");
+                QueryData(sb.getProgress());
+            }
+        });
+        bottomSheet_pointSort.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sort="point";
+                bottomSheet_Text.setText("평점순");
+                QueryData(sb.getProgress());
+            }
+        });
+
 
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -100,7 +141,7 @@ public class MainActivity extends AppCompatActivity
         }
 
         final TextView tv = (TextView)findViewById(R.id.destence);
-        SeekBar sb  = (SeekBar) findViewById(R.id.distancSeekBar);
+        sb  = (SeekBar) findViewById(R.id.distancSeekBar);
 
         sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             public void onStopTrackingTouch(SeekBar seekBar) {
@@ -133,7 +174,7 @@ public class MainActivity extends AppCompatActivity
                 }
             }
         });
-        requestPermission();
+
         new GetRestaurantData(MainActivity.this).execute();
     }
 
@@ -150,6 +191,7 @@ public class MainActivity extends AppCompatActivity
             postDataParam.put("distance", distance);
             postDataParam.put("longitude", longitude);
             postDataParam.put("latitude", latitude);
+            postDataParam.put("sort", sort);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -158,6 +200,31 @@ public class MainActivity extends AppCompatActivity
         new QueryResData(MainActivity.this).execute(postDataParam);
     }
 
+    public void geoTitle() {
+        startLocationUpdates();
+        double latitude = 0.0;
+        double longitude = 0.0;
+        latitude = mCurrentLocation.getLatitude();
+        longitude = mCurrentLocation.getLongitude();
+
+
+        Geocoder gCoder = new Geocoder(this, Locale.getDefault());
+        List<Address> addr = null;
+        try {
+            addr = gCoder.getFromLocation(latitude, longitude, 1);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Address a = addr.get(0);
+        //Toast.makeText(this,"lat"+latitude+ "lon"+longitude+":"+a.getAddressLine(0).toString(), Toast.LENGTH_SHORT).show();
+        title = a.getAddressLine(0).toString();
+
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        setTitle(title);
+    }
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -197,20 +264,26 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        if (id == R.id.nav_main) {
 
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        } else if (id == R.id.nav_map) {
+            Intent intent = new Intent(getApplicationContext(),
+                     NavigateActivity.class);
+            intent.putExtra("user_id", user_id);
+            startActivity(intent);
+        } else if (id == R.id.nav_res) {
+            /*Intent intent = new Intent(getApplicationContext(),
+                    NavigateActivity.class);
+            startActivity(intent);*/
+        } else if (id == R.id.nav_review) {
+            /*Intent intent = new Intent(getApplicationContext(),
+                    NavigateActivity.class);
+            startActivity(intent);*/
+        }else if (id == R.id.nav_logout) {
+            Intent intent = new Intent(getApplicationContext(),
+                    LoginActivity.class);
+            startActivity(intent);
         }
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -272,6 +345,10 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void startLocationUpdates() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            return;
+        }
         mLocationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
@@ -283,10 +360,7 @@ public class MainActivity extends AppCompatActivity
                 locRequest,
                 mLocationListener);
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
-            return;
-        }
     }
 
 
@@ -303,6 +377,12 @@ public class MainActivity extends AppCompatActivity
         return user_id;
     }
 
+    public SpacesItemDecoration getDecoration(){
+        return decoration;
+    }
+    public void setDecoration(SpacesItemDecoration decoration){
+        this.decoration=decoration;
+    }
     //퍼미션
     void requestPermission() {
         final int REQUEST_EXTERNAL_STORAGE = 1;

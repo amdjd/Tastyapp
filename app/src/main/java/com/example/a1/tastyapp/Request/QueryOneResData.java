@@ -52,7 +52,7 @@ public class QueryOneResData extends PostRequest{
             textViews.get(2).setText(restaurant.getAdress());
             textViews.get(3).setText(restaurant.getTel());
             textViews.get(4).setText(restaurant.getBusinesshours());
-
+            textViews.get(5).setText(restaurant.getMenu());
         }else
             Toast.makeText(activity, "err", Toast.LENGTH_SHORT).show();
     }
@@ -70,13 +70,13 @@ public class QueryOneResData extends PostRequest{
                 Restaurant restaurant = new Restaurant(jsonObject.getString("_id"),
                         jsonObject.getDouble("point"),
                         jsonObject.getString("name"),
-                        new URL("http:/13.114.103.74/"+jsonObject.getString("picture")),
+                        new URL("http:/13.124.86.208:3000/"+jsonObject.getString("picture")),
                         jsonObject.getString("tel"),
                         jsonObject.getString("address"),
                         Double.parseDouble(jsonObject.getJSONObject("loc").getJSONArray("coordinates").get(0).toString()),
                         Double.parseDouble(jsonObject.getJSONObject("loc").getJSONArray("coordinates").get(1).toString()),
                         jsonObject.getString("businesshours"),
-                        jsonObject.getString("menu")
+                        jsonObject.getString("type")
                 );
                 output.add(restaurant);
             }

@@ -45,7 +45,7 @@
         <activity android:name=".RegisterActivity" />
         <activity
             android:name=".MainActivity"
-            android:label="MainActivity"
+            android:label="#Place"
             android:theme="@style/AppTheme" />
         <activity android:name=".NavigateActivity" />
         <activity

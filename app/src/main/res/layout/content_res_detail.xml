@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    android:background="#10911100"
     tools:context="com.example.a1.tastyapp.ResDetailActivity">
     <!--tools:showIn="@layout/app_bar_res_detail"-->
 
@@ -37,14 +38,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="30dp"
                     android:gravity="center"
-                    android:text="타이틀" />
+                    android:text="타이틀"
+                    android:textSize="18dp"/>
 
                 <TextView
                     android:id="@+id/textresPoint"
                     android:layout_width="wrap_content"
                     android:layout_height="30dp"
                     android:gravity="center"
-                    android:text="점수" />
+                    android:text="점수"
+                    android:textSize="15dp"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -56,13 +59,19 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
+                        android:layout_margin="5dp"
+                        android:background="@drawable/corner"
                         android:text="찜" />
-
+                    <TextView
+                        android:layout_width="50dp"
+                        android:layout_height="wrap_content" />
                     <Button
                         android:id="@+id/buttonReview"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
+                        android:background="@drawable/corner"
+                        android:layout_margin="5dp"
                         android:text="리뷰하기" />
                 </LinearLayout>
 
@@ -91,7 +100,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="30dp"
                     android:gravity="center"
-                    android:text="주소" />
+                    android:text="주소"
+                    android:textSize="18dp"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -105,7 +115,8 @@
                     android:gravity="center"
                     android:onClick="textresTELonClick"
                     android:textColor="#FF0000FF"
-                    android:text="번호" />
+                    android:text="번호"
+                    android:textSize="18dp"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="30dp"
@@ -114,31 +125,27 @@
                 <TextView
                     android:id="@+id/textBusinesshours"
                     android:layout_width="wrap_content"
-                    android:layout_height="30dp"
+                    android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="영업시간" />
-            </LinearLayout>
-        </android.support.v7.widget.CardView>
-        <android.support.v7.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:cardElevation="4dp"
-            app:cardUseCompatPadding="true">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:orientation="vertical">
+                    android:text="영업시간"
+                    android:textSize="16dp"/>
 
                 <TextView
-                    android:id="@+id/textresMenu"
                     android:layout_width="wrap_content"
                     android:layout_height="30dp"
                     android:gravity="center"
-                    android:text="메뉴 구현" />
+                    android:text="음식종류" />
+                <TextView
+                    android:id="@+id/res_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:gravity="center"
+                    android:text="음식종류"
+                    android:textSize="18dp"/>
+
             </LinearLayout>
         </android.support.v7.widget.CardView>
+
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"

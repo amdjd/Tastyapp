@@ -6,6 +6,7 @@ import android.widget.Toast;
 
 import com.example.a1.tastyapp.LoginActivity;
 import com.example.a1.tastyapp.MainActivity;
+import com.example.a1.tastyapp.RegisterActivity;
 import com.example.a1.tastyapp.ReviewActivity;
 
 import java.net.MalformedURLException;
@@ -39,6 +40,11 @@ public class InsertData extends PostRequest {
 
                 LoginActivity loginActivity = (LoginActivity) activity;
                 intent.putExtra("user_id", loginActivity.getUser_id());
+                activity.startActivity(intent);
+            }
+            if(activity instanceof RegisterActivity) {
+                Intent intent = new Intent(activity,
+                        LoginActivity.class);
                 activity.startActivity(intent);
             }
             if(activity instanceof ReviewActivity) {

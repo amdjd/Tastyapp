@@ -235,7 +235,10 @@ public class MainActivity extends AppCompatActivity
 
         if (0 <= intervalTime && FINISH_INTERVAL_TIME >= intervalTime)
         {
-            super.onBackPressed();
+            MainActivity.this.moveTaskToBack(true);
+            MainActivity.this .finish();
+            android.os.Process.killProcess(android.os.Process.myPid());
+            System.exit(0);
         }
         else
         {

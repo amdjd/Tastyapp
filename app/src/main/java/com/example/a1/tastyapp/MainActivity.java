@@ -276,9 +276,10 @@ public class MainActivity extends AppCompatActivity
                     NavigateActivity.class);
             startActivity(intent);*/
         } else if (id == R.id.nav_review) {
-            /*Intent intent = new Intent(getApplicationContext(),
-                    NavigateActivity.class);
-            startActivity(intent);*/
+            Intent intent = new Intent(getApplicationContext(),
+                    MyReviewActivity.class);
+            intent.putExtra("user_id", user_id);
+            startActivity(intent);
         }else if (id == R.id.nav_logout) {
             Intent intent = new Intent(getApplicationContext(),
                     LoginActivity.class);

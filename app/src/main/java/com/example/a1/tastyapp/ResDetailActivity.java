@@ -5,7 +5,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -55,8 +54,10 @@ public class ResDetailActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent i = new Intent(ResDetailActivity.this, ReviewActivity.class);
+                i.putExtra("name", name);
+                i.putExtra("user_id", user_id);
+                ResDetailActivity.this.startActivity(i);
             }
         });
 
@@ -80,7 +81,7 @@ public class ResDetailActivity extends AppCompatActivity
         textresTEL = (TextView)findViewById(R.id.textresTEL);
         textBusinesshours = (TextView)findViewById(R.id.textBusinesshours);
         textresType = (TextView)findViewById(R.id.res_type);
-        buttonWant = (Button)findViewById(R.id.buttonWant);
+        //buttonWant = (Button)findViewById(R.id.buttonWant);
         buttonReview = (Button)findViewById(R.id.buttonReview);
         buttonReview.setOnClickListener(
                 new Button.OnClickListener() {
@@ -182,9 +183,10 @@ public class ResDetailActivity extends AppCompatActivity
                     NavigateActivity.class);
             startActivity(intent);*/
         } else if (id == R.id.nav_review) {
-            /*Intent intent = new Intent(getApplicationContext(),
-                    NavigateActivity.class);
-            startActivity(intent);*/
+            Intent intent = new Intent(getApplicationContext(),
+                    MyReviewActivity.class);
+            intent.putExtra("user_id", user_id);
+            startActivity(intent);
         }else if (id == R.id.nav_logout) {
             Intent intent = new Intent(getApplicationContext(),
                     LoginActivity.class);

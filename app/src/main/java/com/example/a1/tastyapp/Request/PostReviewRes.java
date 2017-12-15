@@ -8,8 +8,7 @@ import android.util.Log;
 import com.example.a1.tastyapp.Adapter.ReivewAdapter;
 import com.example.a1.tastyapp.Adapter.SpacesItemDecoration;
 import com.example.a1.tastyapp.Item.Review;
-import com.example.a1.tastyapp.MainActivity;
-import com.example.a1.tastyapp.NavigateActivity;
+import com.example.a1.tastyapp.MyReviewActivity;
 import com.example.a1.tastyapp.R;
 
 import org.json.JSONArray;
@@ -43,7 +42,10 @@ public class PostReviewRes extends PostRequest{
     @Override
     protected void onPreExecute() {
         try {
-            url = new URL(serverURLStr + "/query-resview");
+            if(activity instanceof MyReviewActivity)
+                url = new URL(serverURLStr + "/query-userview");
+            else
+                url = new URL(serverURLStr + "/query-resview");
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
@@ -63,28 +65,9 @@ public class PostReviewRes extends PostRequest{
         adapter = new ReivewAdapter(activity, restaurantItem, R.layout.review_item);
         mRecyclerView.setAdapter(adapter);
 
-        if(activity instanceof MainActivity){
-            MainActivity mainActivity = (MainActivity) activity;
-            decoration=mainActivity.getDecoration();
-            if(decoration==null) {
-                decoration = new SpacesItemDecoration(16);
-                mainActivity.setDecoration(decoration);
-                mRecyclerView.addItemDecoration(decoration);
-            }
-        }
-        if(activity instanceof NavigateActivity){
-            NavigateActivity navigateActivity = (NavigateActivity) activity;
-            decoration=navigateActivity.getDecoration();
-            if(decoration==null) {
-                decoration = new SpacesItemDecoration(16);
-                navigateActivity.setDecoration(decoration);
-                mRecyclerView.addItemDecoration(decoration);
-            }
-        }
-        /*if(decoration==null) {
-            decoration = new SpacesItemDecoration(16);
-            mRecyclerView.addItemDecoration(decoration);
-        }*/
+        decoration = new SpacesItemDecoration(16);
+        mRecyclerView.addItemDecoration(decoration);
+
         adapter.notifyDataSetChanged();
     }
 

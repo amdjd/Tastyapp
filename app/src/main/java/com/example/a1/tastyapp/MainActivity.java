@@ -47,6 +47,9 @@ public class MainActivity extends AppCompatActivity
     final private String TAG = "MainActivity";
     final private int MY_PERMISSION_REQUEST_LOCATION = 100;
 
+    private final long FINISH_INTERVAL_TIME = 2000;
+    private long   backPressedTime = 0;
+
     private GoogleApiClient mGoogleApiClient;
     private Location mCurrentLocation;
     private LocationListener mLocationListener;
@@ -227,12 +230,19 @@ public class MainActivity extends AppCompatActivity
     }
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
+        long tempTime = System.currentTimeMillis();
+        long intervalTime = tempTime - backPressedTime;
+
+        if (0 <= intervalTime && FINISH_INTERVAL_TIME >= intervalTime)
+        {
             super.onBackPressed();
         }
+        else
+        {
+            backPressedTime = tempTime;
+            Toast.makeText(getApplicationContext(), "한번 더 뒤로가기 누르시면 종료됩니다.", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     @Override
@@ -458,5 +468,8 @@ public class MainActivity extends AppCompatActivity
             }
         }
     }
+
+
+
 
 }
